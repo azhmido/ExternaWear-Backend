@@ -1,0 +1,31 @@
+{
+  "name": "BACKEND-API",
+  "version": "1.0.0",
+  "description": "",
+  "main": "api/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon api/index.js",
+    "start": "node api/index.js",
+    "build": "echo 'No build step required for Node.js'"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.1",
+  "dependencies": {
+    "bcrypt": "6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "2.8.6",
+    "dotenv": "17.4.2",
+    "express": "5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "8.20.0"
+  },
+  "devDependencies": {
+    "nodemon": "3.1.14"
+  }
+}
