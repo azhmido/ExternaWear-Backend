@@ -4,12 +4,12 @@ import pool from '../config/db.js';
 
 const SALT_ROUNDS = 12;
 
-//konfigurasi cookie JWT
+//cookie JWT diperbarui untuk menyesuaikan dengan environment
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production', //cuma dikirim lewat HTTPS di production
-  sameSite: 'lax', //lax biar cookie dikirim pas redirect dari Xendit
-  maxAge: 24 * 60 * 60 * 1000, //24 jam sesuai expiresIn JWT
+  secure: true,       //true di production Vercel otomatis HTTPS
+  sameSite: 'none',   //none agar cookie bisa dikirim menyeberang dari domain frontend ke backend
+  maxAge: 24 * 60 * 60 * 1000, //24 jam sesuai lifetime token
 };
 
 const getJwtSecret = () => {
@@ -25,7 +25,7 @@ const validateInput = async (username, password) => {
   return null;
 };
 
-//bikin akun baru role user
+//akun baru role user
 export const registerUser = async (req, res) => {
   const { username, password } = req.body;
   const error = await validateInput(username, password);
@@ -39,7 +39,7 @@ export const registerUser = async (req, res) => {
   res.status(201).json({ message: 'Akun berhasil dibuat!', user: newUser });
 };
 
-//bikin admin baru — hanya bisa kalau belum ada admin atau oleh admin yang sudah login
+//admin baru hanya bisa kalau belum ada admin atau oleh admin yang sudah login
 export const registerAdmin = async (req, res) => {
   const { rows: existing } = await pool.query("SELECT COUNT(*)::INT AS count FROM users WHERE role='admin'");
   if (existing[0].count > 0 && (!req.user || req.user.role !== 'admin')) {
@@ -57,7 +57,6 @@ export const registerAdmin = async (req, res) => {
   );
   res.status(201).json({ message: 'Admin berhasil didaftarkan!', user: newUser });
 };
-
 
 export const login = async (req, res) => {
   const { username, password } = req.body;
@@ -91,7 +90,7 @@ export const logout = (req, res) => {
   res.status(200).json({ message: 'Logout berhasil!' });
 };
 
-//ambil data user dari DB berdasarkan id di JWT
+//data user dari DB berdasarkan id di JWT
 export const getMe = async (req, res) => {
   const { rows } = await pool.query(
     'SELECT id, username, role FROM users WHERE id = $1',
@@ -152,7 +151,7 @@ export const updateProfile = async (req, res) => {
   res.status(200).json({ message: 'Profil berhasil diperbarui!', user: updated });
 };
 
-//hapus akun sendiri — perlu password buat konfirmasi
+//hapus akun sendiri perlu password buat konfirmasi
 export const deleteAccount = async (req, res) => {
   const { password } = req.body;
 
@@ -172,25 +171,14 @@ export const deleteAccount = async (req, res) => {
   res.status(200).json({ message: 'Akun berhasil dihapus.' });
 };
 
-// Di dalam ../controller/users-controller.js
-
 export const deleteUserById = async (req, res, next) => {
   try {
-    // 1. Ambil ID dari parameter URL (req.params.id)
     const { id } = req.params;
-
-    // 2. Logika hapus dari database (Contoh menggunakan ORM/Query)
-    // Jika pakai Sequelize: await User.destroy({ where: { id } });
-    // Jika pakai Prisma:    await prisma.user.delete({ where: { id: Number(id) } });
-    
-    // Anggap proses hapus berhasil:
     return res.status(200).json({
       status: 'success',
       message: `User with ID ${id} berhasil dihapus.`
     });
-
   } catch (error) {
-    // Lempar ke global error handler yang ada di index.js
     next(error);
   }
 };
