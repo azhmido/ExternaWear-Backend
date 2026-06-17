@@ -27,6 +27,8 @@ const xenditFetch = async (endpoint, method = 'GET', body = null) => {
 };
 
 //buat invoice hosted user di redirect ke halaman ini
+export { xenditFetch };
+
 export const createXenditInvoice = async ({
   orderId,
   amount,
