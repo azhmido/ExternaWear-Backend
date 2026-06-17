@@ -9,7 +9,7 @@ const XENDIT_STATUS_MAP = {
   EXPIRED: 'cancelled',
 };
 
-//mapping payment_method xendit dari webhook ke format internal
+//mapping payment_method/channel xendit dari webhook ke format internal
 const XENDIT_PM_MAP = {
   BANK_TRANSFER:  'transfer_bank',
   EWALLET:        'e_wallet',
@@ -17,6 +17,17 @@ const XENDIT_PM_MAP = {
   QR_CODE:        'qris',
   CREDIT_CARD:    'credit_card',
   RETAIL_OUTLET:  'transfer_bank',
+  BCA:            'transfer_bank',
+  BNI:            'transfer_bank',
+  BRI:            'transfer_bank',
+  MANDIRI:        'transfer_bank',
+  PERMATA:        'transfer_bank',
+  OVO:            'e_wallet',
+  DANA:           'e_wallet',
+  SHOPEEPAY:      'e_wallet',
+  LINKAJA:        'e_wallet',
+  ALFAMART:       'transfer_bank',
+  INDOMARET:      'transfer_bank',
 };
 
 //agregasi data buat dashboard admin 
@@ -342,7 +353,7 @@ export const xenditWebhook = async (req, res) => {
     return res.status(403).json({ message: 'Unauthorized webhook' });
   }
 
-  const { id: xenditInvoiceId, status, external_id, payment_method } = req.body;
+  const { id: xenditInvoiceId, status, external_id, payment_method, payment_channel } = req.body;
 
   console.log(`[WEBHOOK] Invoice ${xenditInvoiceId} → ${status}`);
 
@@ -354,7 +365,7 @@ export const xenditWebhook = async (req, res) => {
     }
 
     const newStatus    = XENDIT_STATUS_MAP[status];       //mapping PAID kd confirmed EXPIRED kd cancelled
-    const mappedMethod = XENDIT_PM_MAP[payment_method];   //mapping metode pembayaran Xendit ke internal
+    const mappedMethod = XENDIT_PM_MAP[payment_method] || XENDIT_PM_MAP[payment_channel];   //mapping metode pembayaran Xendit ke internal
 
     if (newStatus) {
       //cegah overwrite kalau user udah cancel manual
