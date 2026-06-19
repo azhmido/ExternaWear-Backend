@@ -51,12 +51,12 @@ Backend RESTful API untuk aplikasi e-commerce **ExternaWear** yang dibangun meng
 
 | Teknologi          | Versi | Keterangan                            |
 | ------------------ | ----- | ------------------------------------- |
-| Node.js            | 20.x  | JavaScript Runtime Environment        |
-| Express.js         | 4.x   | Backend Web Framework                 |
+| Node.js            | 22.x  | JavaScript Runtime Environment        |
+| Express.js         | 5.x   | Backend Web Framework                 |
 | PostgreSQL         | 15.x  | Relational Database Management System |
 | pg (Node-Postgres) | 8.x   | PostgreSQL Client                     |
 | jsonwebtoken       | 9.x   | JWT Authentication                    |
-| bcrypt             | 5.x   | Password Hashing                      |
+| bcrypt             | 6.x   | Password Hashing                      |
 | Xendit Node SDK    | 3.x   | Payment Gateway Integration           |
 | pnpm               | 9.x   | Package Manager                       |
 
@@ -66,17 +66,17 @@ Backend RESTful API untuk aplikasi e-commerce **ExternaWear** yang dibangun meng
 
 ```bash
 externawear-backend/
-├── controllers/
+├── api/
+├── config/
+├── controller/
 ├── middleware/
 ├── routes/
-├── services/
-├── utils/
-├── database/
-├── config/
-├── app.js
-├── server.js
+├── .env
+├── gitignore
 ├── package.json
-└── .env.example
+├── pnpm-lock.yaml
+├── README.md
+└── vercel.json
 ```
 
 ---
